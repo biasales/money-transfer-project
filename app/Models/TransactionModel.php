@@ -3,8 +3,6 @@
 namespace App\Models;
 
 use App\Enums\Status;
-use App\Repository\Transaction\Internal\SelectTransaction;
-use App\Repository\Transaction\Internal\UpdateTransaction;
 use App\Repository\TransactionRepositoryResolver;
 use App\Services\Database\DatabaseResolver;
 

@@ -29,4 +29,14 @@ class SelectUser
         return $result == UserType::COMMON->value;
     }
 
+    public static function getUser(int $userId): ?array
+    {
+        $result = DatabaseResolver::resolve()->executeQuery(
+            'SELECT id, name, type, document, amount, email, password, created_at, updated_at FROM users where id = :id', ['id' => $userId])
+            ->fetchAssociative();
+
+
+       return !$result ? null : $result;
+    }
+
 }

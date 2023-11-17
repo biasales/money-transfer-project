@@ -16,11 +16,41 @@ class UserController
 
        $user = UserModel::fromArray($parsedBody);
 
-       if (UserRepositoryResolver::resolve()->createUser($user)) {
-           return $this->sendResponse($response, 200, 'User created Successfully');
+       $inserted_id = UserRepositoryResolver::resolve()->createUser($user);
+
+       if ($inserted_id) {
+           return $this->sendResponse($response, 200, 'User successfully created with id ' . $inserted_id);
        }
 
-        return $this->sendResponse($response, 200, 'Failed to create user');
+        return $this->sendResponse($response, 200, 'Unable to create user');
+    }
+
+    public function getUser(Request $request, Response $response, $args): Response
+    {
+        $parsedBody = $request->getParsedBody();
+
+        $user = UserModel::getUser($parsedBody['id']);
+
+        if ($user) {
+            $user_as_array = UserModel::asArray($user);
+            return $this->sendResponse($response, 200, 'User with id: ' . json_encode($user_as_array, true));
+        }
+
+        return $this->sendResponse($response, 200, 'Unable to find user');
+    }
+
+    public function deleteUser(Request $request, Response $response, $args): Response
+    {
+        $parsedBody = $request->getParsedBody();
+        $userId = $parsedBody['id'];
+
+        $user = UserModel::deleteUser($userId);
+
+        if ($user) {
+            return $this->sendResponse($response, 200, 'Deleted user with id: ' . $userId);
+        }
+
+        return $this->sendResponse($response, 200, 'Unable to delete user');
     }
 
     public function sendResponse(ResponseInterface $response, int $status_code, string $message): Response {

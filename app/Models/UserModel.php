@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\UserType;
 use App\Repository\UserRepositoryResolver;
+use DateTime;
 
 class UserModel
 {
@@ -22,21 +23,27 @@ class UserModel
     public static function fromArray(array $userData): UserModel
     {
         return new UserModel(
-            $userData['id'],
+            isset($userData['id']) ? $userData['id'] : null,
             $userData['name'],
             UserType::from($userData['type']),
             $userData['document'],
             $userData['amount'],
             $userData['email'],
             $userData['password'],
-            $userData['created_at'] ?? null,
-            $userData['password'] ?? null,
+             isset($userData['created_at']) ? new DateTime($userData['created_at']) : null,
+            isset($userData['updated_at']) ? new DateTime($userData['created_at']) : null,
         );
+    }
+
+    public static function getUser(int $userId): ?UserModel
+    {
+        $user = UserRepositoryResolver::resolve()->getUser($userId);
+        return isset($user) ? UserModel::fromArray($user) : null;
     }
 
     public static function isHasMoney(int $userId, string $amount): bool
     {
-        return  UserRepositoryResolver::resolve()->hasAmount($userId, $amount);
+        return UserRepositoryResolver::resolve()->hasAmount($userId, $amount);
     }
 
     public static function getMoney(int $userId): bool
@@ -56,6 +63,31 @@ class UserModel
             return UserRepositoryResolver::resolve()->updateAmount((float)$user_amount - (float)$amount, $userId);
         }
         return UserRepositoryResolver::resolve()->updateAmount((float)$amount + (float)$user_amount, $userId);
+    }
+
+    public static function asArray(UserModel $user): array
+    {
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'type' => $user->type->value,
+            'document' => $user->document,
+            'amount' => $user->amount,
+            'email' => $user->email,
+            'password' => $user->password,
+            'created_at' => $user->created_at->format(\DateTimeInterface::ATOM),
+            'updated_at' => $user->updated_at->format(\DateTimeInterface::ATOM),
+        ];
+
+    }
+
+    public static function deleteUser(string $userId) : bool {
+        $user = self::getUser($userId);
+
+        if (isset($user->id)) {
+            return UserRepositoryResolver::resolve()->deleteUser($user);
+        }
+        return false;
     }
 
 }

@@ -12,7 +12,7 @@ class InsertUser
     private const INSERT_SQL =
         "INSERT INTO users (name, type, document, amount, email, password, created_at, updated_at) VALUES(:name, :type, :document, :amount, :email, :password, :created_at, :updated_at)";
 
-    public static function insert(UserModel $userData): bool
+    public static function insert(UserModel $userData): ?int
     {
         $connection = DatabaseResolver::resolve();
         $connection->beginTransaction();
@@ -32,17 +32,18 @@ class InsertUser
 
         try {
             $result = $connection->executeStatement(self::INSERT_SQL, $dataToInsert);
+            $insertedId = $connection->lastInsertId();
 
             if (!$result) {
-                return false;
+                return null;
             }
 
             $connection->commit();
 
-            return true;
+            return $insertedId;
         } catch (\Exception $exception) {
             $connection->rollBack();
-            return false;
+            return null;
         }
     }
 }
