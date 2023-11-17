@@ -2,6 +2,7 @@
 
 namespace App\Seeders\User;
 
+use App\Enums\UserType;
 use App\Models\UserModel;
 use App\Repository\UserRepositoryResolver;
 use App\Seeders\Seeder;
@@ -15,11 +16,11 @@ class UserSeeder implements Seeder
             "Bianca Sales Usuario",
             UserType::MERCHANT,
             random_int(5,15),
+            '50.00',
             "biasalsessa@test.com",
             123456,
            null,
             null,
-            null
         );
 
         $merchant_user = new UserModel(
@@ -27,11 +28,11 @@ class UserSeeder implements Seeder
             "Bianca Sales Lojista",
             UserType::MERCHANT,
             random_int(5,999),
+            '50.00',
             "biasasles_lojasa@test.com",
             123456,
            null,
            null,
-            null
         );
 
         $user_repository = UserRepositoryResolver::resolve();

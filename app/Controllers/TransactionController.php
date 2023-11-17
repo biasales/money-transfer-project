@@ -12,6 +12,7 @@ class TransactionController
 {
     public function createTransaction(Request $request, Response $response, $args): Response
     {
+        echo(json_encode($request));
         $parsedBody = $request->getParsedBody();
 
         $transaction = TransactionModel::fromArray($parsedBody);
