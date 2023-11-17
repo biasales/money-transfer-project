@@ -9,12 +9,14 @@ $app = AppFactory::create();
 $app->add(\App\Middleware\JsonBodyParserMiddleware::class);
 
 // Routes
-$app->post('/users', '\App\Controllers\UserController:createUser');
-$app->get('/users', '\App\Controllers\UserController:getUser');
-$app->delete('/users', '\App\Controllers\UserController:deleteUser');
+$app->post('/api/users', '\App\Controllers\UserController:createUser');
+$app->get('/api/users', '\App\Controllers\UserController:getUser');
+$app->delete('/api/users', '\App\Controllers\UserController:deleteUser');
 
-$app->post('/transaction', '\App\Controllers\TransactionController:createTransaction');
-$app->get('/executeTransaction', '\App\Controllers\TransactionController:executeTransaction');
+$app->post('/api/transaction', '\App\Controllers\TransactionController:createTransaction');
+$app->get('/api/transaction', '\App\Controllers\TransactionController:getTransaction');
+
+$app->post('/api/transaction/execute', '\App\Controllers\TransactionController:executeTransaction');
 
 $app->run();
 

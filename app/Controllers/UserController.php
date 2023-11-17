@@ -19,7 +19,7 @@ class UserController
        $inserted_id = UserRepositoryResolver::resolve()->createUser($user);
 
        if ($inserted_id) {
-           return $this->sendResponse($response, 200, 'User successfully created with id ' . $inserted_id);
+           return $this->sendResponse($response, 201, 'User successfully created with id ' . $inserted_id);
        }
 
         return $this->sendResponse($response, 200, 'Unable to create user');

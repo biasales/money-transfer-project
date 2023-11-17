@@ -31,6 +31,19 @@ class TransactionModel
         );
     }
 
+    public static function asArray(TransactionModel $transaction): array
+    {
+        return [
+            'id' => $transaction->id,
+            'payee_id' => $transaction->payee_id,
+            'payer_id' => $transaction->payer_id,
+            'amount' => $transaction->amount,
+            'status' => $transaction->status->value,
+            'created_at' => $transaction->created_at->format(\DateTimeInterface::ATOM),
+            'updated_at' => $transaction->updated_at->format(\DateTimeInterface::ATOM),
+        ];
+    }
+
     public static function makeTransaction(TransactionModel $transaction): bool {
         $amount = $transaction->amount;
         $payer = $transaction->payer_id;
@@ -70,7 +83,7 @@ class TransactionModel
         TransactionRepositoryResolver::resolve()->finishTransaction($transaction_id, $transaction_status);
     }
 
-    public static function selectTransaction(int $transaction_id): TransactionModel
+    public static function getTransaction(int $transaction_id): TransactionModel
     {
         $transaction = TransactionRepositoryResolver::resolve()->getTransaction($transaction_id);
         return TransactionModel::fromArray($transaction);

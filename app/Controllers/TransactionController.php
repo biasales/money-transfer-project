@@ -17,8 +17,9 @@ class TransactionController
 
         $transaction = TransactionModel::fromArray($parsedBody);
 
-        if (TransactionRepositoryResolver::resolve()->createTransaction($transaction)) {
-            return $this->sendResponse($response, 201, 'Transaction created Successfully');
+        $insertedId = TransactionRepositoryResolver::resolve()->createTransaction($transaction);
+        if ($insertedId) {
+            return $this->sendResponse($response, 201, 'Transaction created successfully with id:'. $insertedId);
         }
 
         return $this->sendResponse($response, 200, 'Failed to create transaction');
@@ -28,13 +29,27 @@ class TransactionController
     {
         $parsedBody = $request->getParsedBody();
 
-        $transaction = TransactionModel::selectTransaction($parsedBody['id']);
+        $transaction = TransactionModel::getTransaction($parsedBody['id']);
 
         if (TransactionModel::makeTransaction($transaction)) {
             return $this->sendResponse($response, 200, 'Transaction execute with success');
         }
 
         return $this->sendResponse($response, 200, 'Failed to execute transaction');
+    }
+
+    public function getTransaction(Request $request, Response $response, $args): Response
+    {
+        $parsedBody = $request->getParsedBody();
+
+        $transaction = TransactionModel::getTransaction($parsedBody['id']);
+
+        if ($transaction) {
+            $transaction_as_array = TransactionModel::asArray($transaction);
+            return $this->sendResponse($response, 200, 'Transaction with id:'. json_encode($transaction_as_array, true));
+        }
+
+        return $this->sendResponse($response, 200, 'Failed to find transaction');
     }
 
     public function sendResponse(ResponseInterface $response, int $status_code, string $message): Response {

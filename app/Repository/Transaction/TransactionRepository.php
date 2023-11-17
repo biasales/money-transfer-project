@@ -10,7 +10,7 @@ use App\Repository\Transaction\Internal\UpdateTransaction;
 
 class TransactionRepository
 {
-    public function createTransaction(TransactionModel $userData): bool
+    public function createTransaction(TransactionModel $userData): ?int
     {
        return InsertTransaction::insert($userData);
     }

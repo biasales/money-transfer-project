@@ -17,7 +17,7 @@ VALUES
     (:payee_id, :payer_id, :amount, :status, :created_at, :finished_at)
 SQL;
 
-    public static function insert(TransactionModel $transactionData): bool
+    public static function insert(TransactionModel $transactionData): ?int
     {
         $connection = DatabaseResolver::resolve();
         $connection->beginTransaction();
@@ -36,17 +36,17 @@ SQL;
 
         try {
             $result = $connection->executeStatement(self::INSERT_SQL, $dataToInsert);
+            $insertedId = $connection->lastInsertId();
 
             if (!$result) {
-                return false;
+                return null;
             }
 
             $connection->commit();
-
-            return true;
+            return $insertedId;
         } catch (\Exception $exception) {
             $connection->rollBack();
-            return false;
+            return null;
         }
     }
 
