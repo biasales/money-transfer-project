@@ -38,7 +38,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 - **Status Code 201**
 ```json
 {
-  "User successfully created with id 123"
+  "message": "User successfully created with id 123"
 }
 ```
 
@@ -46,7 +46,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 - **Status Code 200**
 ```json
 {
-  "Unable to create user user"
+  "message": "Unable to create user user"
 }
 ```
 
@@ -65,7 +65,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 
 ```json
 {
-  "id": "123",
+  "id": "123"
 }
 ```
 
@@ -86,7 +86,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 - **Status Code 200**
 ```json
 {
-  "Unable to find user"
+  "message": "Unable to find user"
 }
 ```
 
@@ -105,7 +105,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 
 ```json
 {
-  "id": "123",
+  "id": "123"
 }
 ```
 
@@ -113,7 +113,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 
 ```json
 {
-  "message": 'Deleted user with id: 123'
+  "message": "Deleted user with id: 123"
 }
 ```
 
@@ -121,7 +121,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 - **Status Code 200**
 ```json
 {
-  "Unable to delete user"
+  "message": "Unable to delete user"
 }
 ```
 
@@ -160,7 +160,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 - **Status Code 200**
 ```json
 {
-  "Failed to create transaction"
+  "message": "Failed to create transaction"
 }
 ```
 
@@ -202,7 +202,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 
 ```json
 {
-  "id": "123",
+  "id": "123"
 }
 ```
 
