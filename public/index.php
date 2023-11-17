@@ -7,12 +7,13 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
+$app->add(\App\Middleware\JsonBodyParserMiddleware::class);
+
 // Routes
-//$app->get('/users', '\Controllers\UserController:getAllUsers');
-//$app->get('/users/{id}', '\Controllers\UserController:getUser');
-$app->get('/users/{name}', '\App\Controllers\UserController:createUser');
-//$app->put('/users/{id}', '\Controllers\UserController:updateUser');
-//$app->delete('/users/{id}', '\Controllers\UserController:deleteUser');
+
+$app->post('/users', '\App\Controllers\UserController:createUser');
+
+$app->post('/transaction', '\App\Controllers\TransactionController:createTransaction');
 
 $app->run();
 

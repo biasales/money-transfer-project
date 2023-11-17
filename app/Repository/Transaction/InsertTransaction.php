@@ -2,29 +2,48 @@
 
 namespace App\Repository\Transaction;
 
+use App\Enums\Status;
 use App\Models\TransactionModel;
 use App\Services\Database\DatabaseResolver;
+use DateTimeInterface;
+use DateTime;
 
 class InsertTransaction
 {
-    public static function execute(TransactionModel $transaction): bool
+    private const INSERT_SQL =
+        "INSERT INTO transactions (payee_id, payer_id, amount, status, created_at, finished_at) VALUES( :payee_id, :payer_id, :amount, :status, :created_at, :finished_at)";
+
+    public static function execute(TransactionModel $transactionData): bool
     {
         $connection = DatabaseResolver::resolve();
         $connection->beginTransaction();
 
-        try {
-            $result = $connection->createQueryBuilder()->insert($transaction->toArray());
+        $dateTime = new DateTime();
+
+        $dataToInsert = [
+            'payee_id' => $transactionData->payee_id,
+            'payer_id' => $transactionData->payer_id,
+            'amount' => $transactionData->amount,
+            'status' => Status::PENDING->value,
+            'password' => $transactionData->status,
+            'created_at' => $dateTime->format(DateTimeInterface::ATOM),
+            'finished_at' => null,
+        ];
+
+//        try {
+            $result = $connection->executeStatement(self::INSERT_SQL, $dataToInsert);
 
             if (!$result) {
                 return false;
             }
+
             $connection->commit();
-        } catch (\Exception $exception) {
-            $connection->rollBack();
-            throw new \Exception('erro ao tentar persistir no banco de dados');
-            return false;
-        }
-        return true;
+
+            return true;
+//        } catch (\Exception $exception) {
+//            $connection->rollBack();
+//            return false;
+//        }
     }
 
 }

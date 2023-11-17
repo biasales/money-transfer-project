@@ -2,9 +2,9 @@
 
 namespace App\Enums;
 
-enum Status
+enum Status: int
 {
-    case PENDING;
-    case APPROVED;
-    case CANCELLED;
+    case PENDING = 1;
+    case APPROVED = 2;
+    case CANCELLED = 3;
 }

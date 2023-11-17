@@ -2,24 +2,32 @@
 
 namespace App\Controllers;
 
-use App\Repository\UserRepository;
+use App\Models\UserModel;
+use App\Repository\User\UserRepositoryResolver;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Slim\Psr7\Stream;
 
 class UserController
 {
     public function createUser(Request $request, Response $response, $args): Response
     {
-//        $userData = $request->getParsedBody();
-        $name = $args['name'];
+       $parsedBody = $request->getParsedBody();
 
-        $response->getBody()->write("Hello, $name");
-        return $response;
+       $user = UserModel::fromArray($parsedBody);
 
-//        $response->getBody()->write($test);
-//        return $response
-//            ->withStatus(201)
-//            ->withHeader('Content-Type', 'application/json');
+       if (UserRepositoryResolver::resolve()->createUser($user)) {
+           return $this->sendResponse($response, 200, 'User created Successfully');
+       }
+
+        return $this->sendResponse($response, 200, 'Failed to create user');
+    }
+
+    public function sendResponse(ResponseInterface $response, int $status_code, string $message): Response {
+        $response->getBody()->write($message);
+
+        return $response
+            ->withStatus($status_code)
+            ->withHeader('Content-Type', 'application/json');
     }
 }
