@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\User;
+namespace App\Repository\User\Internal;
 
 use App\Models\UserModel;
 use App\Services\Database\DatabaseResolver;
@@ -12,7 +12,7 @@ class InsertUser
     private const INSERT_SQL =
         "INSERT INTO users (name, type, document, amount, email, password, created_at, updated_at) VALUES(:name, :type, :document, :amount, :email, :password, :created_at, :updated_at)";
 
-    public static function execute(UserModel $userData): bool
+    public static function insert(UserModel $userData): bool
     {
         $connection = DatabaseResolver::resolve();
         $connection->beginTransaction();

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\Transaction;
+namespace App\Repository;
 
-use App\Repository\TransactionRepository;
+use App\Repository\Transaction\TransactionRepository;
 
 class TransactionRepositoryResolver
 {

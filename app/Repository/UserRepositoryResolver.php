@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Repository\User;
+namespace App\Repository;
 
-use App\Repository\UserRepository;
+use App\Repository\User\UserRepository;
 
 class UserRepositoryResolver
 {

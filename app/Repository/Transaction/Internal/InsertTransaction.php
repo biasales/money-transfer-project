@@ -1,19 +1,23 @@
 <?php
 
-namespace App\Repository\Transaction;
+namespace App\Repository\Transaction\Internal;
 
 use App\Enums\Status;
 use App\Models\TransactionModel;
 use App\Services\Database\DatabaseResolver;
-use DateTimeInterface;
 use DateTime;
+use DateTimeInterface;
 
 class InsertTransaction
 {
-    private const INSERT_SQL =
-        "INSERT INTO transactions (payee_id, payer_id, amount, status, created_at, finished_at) VALUES( :payee_id, :payer_id, :amount, :status, :created_at, :finished_at)";
+    private const INSERT_SQL = <<<SQL
+INSERT INTO transactions 
+    (payee_id, payer_id, amount, status, created_at, finished_at) 
+VALUES
+    (:payee_id, :payer_id, :amount, :status, :created_at, :finished_at)
+SQL;
 
-    public static function execute(TransactionModel $transactionData): bool
+    public static function insert(TransactionModel $transactionData): bool
     {
         $connection = DatabaseResolver::resolve();
         $connection->beginTransaction();
@@ -30,7 +34,7 @@ class InsertTransaction
             'finished_at' => null,
         ];
 
-//        try {
+        try {
             $result = $connection->executeStatement(self::INSERT_SQL, $dataToInsert);
 
             if (!$result) {
@@ -40,10 +44,10 @@ class InsertTransaction
             $connection->commit();
 
             return true;
-//        } catch (\Exception $exception) {
-//            $connection->rollBack();
-//            return false;
-//        }
+        } catch (\Exception $exception) {
+            $connection->rollBack();
+            return false;
+        }
     }
 
 }
