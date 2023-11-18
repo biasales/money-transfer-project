@@ -2,8 +2,46 @@
 
 Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API foi projetada para permitir a criação e gerenciamento de usuários, bem como a realização de transferências de dinheiro entre eles.
 
-## Como Usar
 
+## Instalação
+
+Siga estas instruções para configurar e executar o projeto localmente.
+
+### Pré-requisitos
+
+Certifique-se de ter o Docker e o Docker Compose instalados em sua máquina.
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [Docker Compose](https://docs.docker.com/compose/install/)
+
+### Passos de Instalação
+
+1. Clone o repositório
+
+```bash
+   git clone https://github.com/biasales/money-transfer-project.git
+   cd money-transfer-project
+```
+
+Execute o composer install
+```bash
+   composer install
+```
+Inicie os containers Docker
+
+```bash
+  docker-compose up --build
+```
+
+Execute as migrações
+
+```bash
+docker-compose exec php-fpm /bin/bash
+vendor/bin/phinx migrate
+```
+
+
+## Como Usar
 ### 1. Criação de Usuários
 
 #### Endpoint: `api/users`
