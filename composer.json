@@ -8,7 +8,6 @@
   },
   "require": {
     "slim/slim": "^4.12",
-    "illuminate/database": "^10.32",
     "slim/psr7": "^1.6",
     "doctrine/dbal": "^3.7",
     "symfony/orm-pack": "^2.4",

@@ -7,20 +7,20 @@ use Doctrine\DBAL\DriverManager;
 
 class DatabaseResolver
 {
-    private static Connection $database_connection;
+    private static Connection $databaseConnection;
 
     public static function resolve(): Connection
     {
-        return self::$database_connection ?? self::$database_connection = self::getDatabaseConnection();
+        return self::$databaseConnection ?? self::$databaseConnection = self::getDatabaseConnection();
     }
 
     private static function getDatabaseConnection(): Connection
     {
         $connectionParams = [
             'dbname'   => 'money-project-database',
-            'user'     => 'root', // TODO: Add this as Env
-            'password' => 'root', // TODO: Add this as Env
-            'host'     => 'mysql', // TODO: Add this as Env
+            'user'     => 'root',
+            'password' => 'root',
+            'host'     => 'mysql',
             'driver'   => 'pdo_mysql',
         ];
 

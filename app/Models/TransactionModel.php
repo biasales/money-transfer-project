@@ -3,29 +3,27 @@
 namespace App\Models;
 
 use App\Enums\Status;
-use App\Repository\TransactionRepositoryResolver;
-use App\Services\Database\DatabaseResolver;
 
 class TransactionModel
 {
     public function __construct(
-        public readonly ?int $id,
-        public readonly int $payee_id,
-        public readonly int $payer_id,
-        public readonly string $amount,
-        public readonly Status $status,
-        public readonly ?\DateTime $created_at,
-        public readonly ?\DateTime $updated_at,
-    ){}
+        public readonly ?int       $id,
+        public readonly int        $payeeId,
+        public readonly int        $payerId,
+        public readonly int        $amount,
+        public readonly Status     $status,
+        public readonly ?\DateTime $createdAt,
+        public readonly ?\DateTime $updatedAt,
+    ) {}
 
     public static function fromArray(array $transactionData): TransactionModel
     {
         return  new TransactionModel(
-            $transactionData['id'],
+            $transactionData['id'] ?? null,
             $transactionData['payee_id'],
             $transactionData['payer_id'],
             $transactionData['amount'],
-            Status::from((int) $transactionData['status']) ?? Status::PENDING,
+            isset($transactionData['status']) ? Status::from($transactionData['status']) : Status::PENDING,
             $userData['created_at'] ?? null,
             $userData['password'] ?? null,
         );
@@ -35,68 +33,12 @@ class TransactionModel
     {
         return [
             'id' => $transaction->id,
-            'payee_id' => $transaction->payee_id,
-            'payer_id' => $transaction->payer_id,
+            'payee_id' => $transaction->payeeId,
+            'payer_id' => $transaction->payerId,
             'amount' => $transaction->amount,
             'status' => $transaction->status->value,
-            'created_at' => $transaction->created_at->format(\DateTimeInterface::ATOM),
-            'updated_at' => $transaction->updated_at->format(\DateTimeInterface::ATOM),
+            'created_at' => $transaction->createdAt->format(\DateTimeInterface::ATOM),
+            'updated_at' => $transaction->updatedAt->format(\DateTimeInterface::ATOM),
         ];
     }
-
-    public static function makeTransaction(TransactionModel $transaction): bool {
-        $amount = $transaction->amount;
-        $payer = $transaction->payer_id;
-        $payee = $transaction->payee_id;
-
-        $is_has_money = UserModel::isHasMoney($payer, $amount);
-        $is_common_user = UserModel::isCommonUser($payer);
-
-        if ($transaction->status == Status::PENDING) {
-
-            if ($is_common_user && $is_has_money) {
-                $connection = DatabaseResolver::resolve();
-                $connection->beginTransaction();
-
-                try {
-                    //TODO: call external service
-                    $new_payer_amount = UserModel::updateAmount($payer, $amount, true);
-                    $new_payee_amount = UserModel::updateAmount($payee, $amount, false);
-
-                    if (!$new_payee_amount && !$new_payer_amount) {
-                        $connection->rollBack();
-                        self::failTransaction($transaction);
-                    }
-                    $connection->commit();
-                    self::approveTransaction($transaction);
-                } catch (\Exception $exception) {
-                    $connection->rollBack();
-                    return self::failTransaction($transaction);
-                }
-            }
-        }
-        return false;
-    }
-
-    private static function updateTransaction(int $transaction_id, Status $transaction_status): void
-    {
-        TransactionRepositoryResolver::resolve()->finishTransaction($transaction_id, $transaction_status);
-    }
-
-    public static function getTransaction(int $transaction_id): TransactionModel
-    {
-        $transaction = TransactionRepositoryResolver::resolve()->getTransaction($transaction_id);
-        return TransactionModel::fromArray($transaction);
-    }
-
-    public static function failTransaction(TransactionModel $transaction): false {
-        self::updateTransaction($transaction->id, Status::CANCELLED);
-        return false;
-    }
-
-    public static function approveTransaction(TransactionModel $transaction): true {
-        self::updateTransaction($transaction->id, Status::APPROVED);
-        return true;
-    }
-
 }

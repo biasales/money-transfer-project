@@ -15,7 +15,7 @@ class TransactionRepository
        return InsertTransaction::insert($userData);
     }
 
-    public function getTransaction(int $transactionId): array
+    public function getTransaction(int $transactionId): ?array
     {
         return SelectTransaction::selectTransactionRow($transactionId);
     }

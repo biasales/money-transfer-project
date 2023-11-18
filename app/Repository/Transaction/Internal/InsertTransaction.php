@@ -11,11 +11,11 @@ use DateTimeInterface;
 class InsertTransaction
 {
     private const INSERT_SQL = <<<SQL
-INSERT INTO transactions 
-    (payee_id, payer_id, amount, status, created_at, finished_at) 
-VALUES
-    (:payee_id, :payer_id, :amount, :status, :created_at, :finished_at)
-SQL;
+    INSERT INTO transactions 
+        (payee_id, payer_id, amount, status, created_at, finished_at) 
+    VALUES
+        (:payee_id, :payer_id, :amount, :status, :created_at, :finished_at)
+    SQL;
 
     public static function insert(TransactionModel $transactionData): ?int
     {
@@ -25,8 +25,8 @@ SQL;
         $dateTime = new DateTime();
 
         $dataToInsert = [
-            'payee_id' => $transactionData->payee_id,
-            'payer_id' => $transactionData->payer_id,
+            'payee_id' => $transactionData->payeeId,
+            'payer_id' => $transactionData->payerId,
             'amount' => $transactionData->amount,
             'status' => Status::PENDING->value,
             'password' => $transactionData->status,

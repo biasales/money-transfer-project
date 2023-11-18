@@ -1,5 +1,4 @@
 /.phpunit.result.cache
 /vendor/
 /phpdocker/
-/.phpdoc/
 /app/Seeders/

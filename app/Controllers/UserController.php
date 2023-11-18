@@ -3,61 +3,52 @@
 namespace App\Controllers;
 
 use App\Models\UserModel;
-use App\Repository\UserRepositoryResolver;
-use Psr\Http\Message\ResponseInterface;
+use App\Repository\User\UserRepositoryResolver;
+use App\Services\User\UserService;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-class UserController
+class UserController extends BaseController
 {
-    public function createUser(Request $request, Response $response, $args): Response
+    public function createUser(Request $request, Response $response): Response
     {
        $parsedBody = $request->getParsedBody();
 
        $user = UserModel::fromArray($parsedBody);
 
-       $inserted_id = UserRepositoryResolver::resolve()->createUser($user);
+       $insertedId = UserRepositoryResolver::resolve()->createUser($user);
 
-       if ($inserted_id) {
-           return $this->sendResponse($response, 201, 'User successfully created with id ' . $inserted_id);
+       if ($insertedId) {
+           return $this->sendResponse($response, 201, 'User successfully created with id ' . $insertedId);
        }
 
-        return $this->sendResponse($response, 200, 'Unable to create user');
+        return $this->sendResponse($response, 400, 'Unable to create user');
     }
 
-    public function getUser(Request $request, Response $response, $args): Response
+    public function getUser(Request $request, Response $response): Response
     {
         $parsedBody = $request->getParsedBody();
 
-        $user = UserModel::getUser($parsedBody['id']);
+        $user = UserService::getUserById($parsedBody['id']);
 
         if ($user) {
-            $user_as_array = UserModel::asArray($user);
-            return $this->sendResponse($response, 200, 'User with id: ' . json_encode($user_as_array, true));
+            return $this->sendResponse($response, 200, 'User retrieved successfully', $user);
         }
 
-        return $this->sendResponse($response, 200, 'Unable to find user');
+        return $this->sendResponse($response, 400, 'Unable to find user');
     }
 
-    public function deleteUser(Request $request, Response $response, $args): Response
+    public function deleteUser(Request $request, Response $response): Response
     {
         $parsedBody = $request->getParsedBody();
         $userId = $parsedBody['id'];
 
-        $user = UserModel::deleteUser($userId);
+        $userWasDeleted = UserService::deleteUserById($userId);
 
-        if ($user) {
+        if ($userWasDeleted) {
             return $this->sendResponse($response, 200, 'Deleted user with id: ' . $userId);
         }
 
-        return $this->sendResponse($response, 200, 'Unable to delete user');
-    }
-
-    public function sendResponse(ResponseInterface $response, int $status_code, string $message): Response {
-        $response->getBody()->write($message);
-
-        return $response
-            ->withStatus($status_code)
-            ->withHeader('Content-Type', 'application/json');
+        return $this->sendResponse($response, 400, 'Unable to delete user');
     }
 }

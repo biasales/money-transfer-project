@@ -6,10 +6,27 @@ use App\Services\Database\DatabaseResolver;
 
 class UpdateUser
 {
-    public static function updateAmount(string $amount, int $userId): bool {
-        $connection = DatabaseResolver::resolve();
+    private const UPDATE_SQL = "UPDATE users SET amount = :amount WHERE id = :id";
 
-        return $connection->executeStatement('UPDATE users SET amount = :amount where id = :id', ['id' => $userId, 'amount' => $amount,]);
+    public static function updateAmount(int $userId, int $amount): bool
+    {
+        $connection = DatabaseResolver::resolve();
+        $connection->beginTransaction();
+
+        try {
+            $result = $connection->executeStatement(self::UPDATE_SQL, ['amount' => $amount, 'id' => $userId]);
+
+            if ($result == 0) {
+                return false;
+            }
+
+            $connection->commit();
+
+            return true;
+        } catch (\Exception $exception) {
+            $connection->rollBack();
+            return false;
+        }
     }
 
 }

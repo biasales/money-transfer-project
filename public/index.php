@@ -15,7 +15,6 @@ $app->delete('/api/users', '\App\Controllers\UserController:deleteUser');
 
 $app->post('/api/transaction', '\App\Controllers\TransactionController:createTransaction');
 $app->get('/api/transaction', '\App\Controllers\TransactionController:getTransaction');
-
 $app->post('/api/transaction/execute', '\App\Controllers\TransactionController:executeTransaction');
 
 $app->run();

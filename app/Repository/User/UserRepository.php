@@ -20,26 +20,13 @@ class UserRepository
         return SelectUser::getUser($userId);
     }
 
-    public function getAmount(int $userId): bool
-    {
-        return SelectUser::getMoney($userId);
-    }
-
-    public function isCommonUserType(int $userId): bool {
-        return SelectUser::isCommonUserType($userId);
-    }
-
     public function updateAmount(int $userId, string $amount): bool {
         return UpdateUser::updateAmount($userId, $amount);
     }
 
-    public function hasAmount(int $userId, string $amount): bool {
-        return SelectUser::hasAmount($userId, $amount);
-    }
-
-    public function deleteUser(?UserModel $user): bool
+    public function deleteUser(?int $userId): bool
     {
-        return DeleteUser::deleteUser($user->id);
+        return DeleteUser::deleteUser($userId);
     }
 
 }

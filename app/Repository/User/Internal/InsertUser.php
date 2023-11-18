@@ -10,7 +10,7 @@ use DateTimeInterface;
 class InsertUser
 {
     private const INSERT_SQL =
-        "INSERT INTO users (name, type, document, amount, email, password, created_at, updated_at) VALUES(:name, :type, :document, :amount, :email, SHA2(:password), :created_at, :updated_at)";
+        "INSERT INTO users (name, type, document, amount, email, password, created_at, updated_at) VALUES(:name, :type, :document, :amount, :email, :password, :created_at, :updated_at)";
 
     public static function insert(UserModel $userData): ?int
     {

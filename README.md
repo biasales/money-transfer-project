@@ -6,7 +6,7 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 
 ### 1. Criação de Usuários
 
-#### Endpoint: `/users`
+#### Endpoint: `api/users`
 
 - **Método**: POST
 - **Descrição**: Cria um novo usuário.
@@ -20,15 +20,17 @@ Bem-vindo à API de Gestão de Usuários e Transferência de Dinheiro! Esta API 
 - `senha` (string): Senha para autenticação.
 - `amount` (string): Valor na carteira do usuário.
 
+docker-compose exec php-fpm bash && vendor/bin/phinx migrate
+
 ##### Exemplo de Requisição:
 
 ```json
 {
   "name": "John Doe",
-  "email": "john.doe@example.com",
-  "type": "john.doe@example.com",
-  "document": "123456",
-  "senha": "123456",
+  "email": "john.doe@ee.com",
+  "type": "1",
+  "document": "125454546",
+  "password": "12443456",
   "amount": "20.00"
 }
 ```

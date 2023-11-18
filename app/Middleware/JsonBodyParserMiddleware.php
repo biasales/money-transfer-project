@@ -18,9 +18,9 @@ class JsonBodyParserMiddleware implements MiddlewareInterface
             $contents = json_decode(file_get_contents('php://input'), true);
 
             if (json_last_error() !== JSON_ERROR_NONE) {
-                    $response = new Response();
-                    $response->getBody()->write(json_encode(['error' => json_last_error_msg()]));
-                    return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
+                $response = new Response();
+                $response->getBody()->write(json_encode(['error' => json_last_error_msg()]));
+                return $response->withHeader('Content-Type', 'application/json')->withStatus(400);
             }
 
             $request = $request->withParsedBody($contents);
